@@ -1,0 +1,52 @@
+name: iOS verification
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate metadata
+        run: |
+          plutil -lint SuperCool/Info.plist
+          plutil -lint SuperCool/PrivacyInfo.xcprivacy
+          plutil -lint SuperCool/en.lproj/Localizable.strings
+          plutil -lint SuperCool/es.lproj/Localizable.strings
+      - name: Run portable model and persistence tests
+        run: swift test --parallel
+      - name: Build without signing
+        run: >-
+          xcodebuild
+          -project SuperCool.xcodeproj
+          -scheme SuperCool
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO
+          clean build
+      - name: Analyze app
+        run: >-
+          xcodebuild
+          -project SuperCool.xcodeproj
+          -scheme SuperCool
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO
+          analyze
+      - name: Run unit and UI tests
+        run: >-
+          xcodebuild
+          -project SuperCool.xcodeproj
+          -scheme SuperCool
+          -destination 'platform=iOS Simulator,OS=latest,name=iPhone 16 Pro'
+          CODE_SIGNING_ALLOWED=NO
+          test
