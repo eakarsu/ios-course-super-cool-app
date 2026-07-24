@@ -57,3 +57,18 @@ Stop adding generated pages; prove one mobile/iOS workflow against real services
 This project is intentionally a local-only native iOS application: it has no backend, HTTP listener, account, remote API, database, or authentication/session surface. A service-style `start.sh` and login probe are therefore inapplicable and were not fabricated. The non-suite result is `NOT_APPLICABLE/native_ios_no_service`.
 
 The portable Swift package built successfully and all six model, persistence, corruption/future-archive recovery, migration, restart, and deterministic network-status tests passed. Full simulator launch remains subject to the already documented host CoreSimulator/platform mismatch; CI and an updated Apple toolchain remain the native runtime boundary.
+
+## Isolated runtime-verification companion (2026-07-24)
+
+The campaign now requires a local credential and provider-verification runtime even for
+native repositories. A standard-library-only companion therefore runs separately on
+assigned loopback API/UI ports. It does not alter the UIKit product, access native app
+data, or convert the supported product into a web application.
+
+The companion adds SQLite-backed credential login, durable digest-only sessions,
+identity/logout, a functional browser login/advisory UI, and a protected canonical
+OpenRouter governance review endpoint. Provider receipts and outputs are append-only;
+provider failures are terminal and controlled; structured request logs omit query
+strings and sensitive bodies. Native evidence remains unchanged: the six portable
+tests are the available local native gate, while honest simulator execution still
+requires the documented compatible CoreSimulator and iOS platform.

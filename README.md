@@ -40,3 +40,11 @@ The shared scheme runs model, persistence, corruption-recovery, connectivity, lo
 - `Config/App.xcconfig` contains safe, non-secret defaults. Supply bundle/signing overrides locally or in protected CI settings.
 
 See `docs/RELEASE.md` for privacy, telemetry, signing, asset, and release-owner gates.
+
+## Isolated runtime-verification companion
+
+The campaign-required root `start.sh` launches a separate loopback-only verification
+companion; it does not launch, replace, or inspect the native UIKit app. The companion
+provides a real local login UI, SQLite-backed sessions, and a protected OpenRouter
+governance advisory whose provider receipt and output are stored append-only. See
+`docs/RUNTIME_COMPANION.md` for its exact boundary and verification commands.
