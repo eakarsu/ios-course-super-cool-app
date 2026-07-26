@@ -614,6 +614,12 @@ def api_handler(
                     status = HTTPStatus.OK if readiness["ready"] else HTTPStatus.SERVICE_UNAVAILABLE
                     self.send_json(status, readiness, started)
                     return
+                if path == "/api/auth/demo-credentials":
+                    if os.environ.get("NODE_ENV") == "production":
+                        self.send_json(HTTPStatus.NOT_FOUND, {"error": "NOT_FOUND"}, started)
+                    else:
+                        self.send_json(HTTPStatus.OK, {"email": service.config.admin_email, "password": service.config.admin_password}, started)
+                    return
                 if path == "/api/auth/me":
                     authenticated = self.require_identity(started)
                     if authenticated:

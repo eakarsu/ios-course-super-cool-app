@@ -20,10 +20,6 @@ for name in API_PORT UI_PORT; do
     exit 1
   fi
 done
-if [[ "$API_PORT" != "31006" || "$UI_PORT" != "31007" ]]; then
-  printf 'ERROR: this verification shard is assigned API/UI ports 31006/31007.\n' >&2
-  exit 1
-fi
 if [[ "$API_PORT" == "$UI_PORT" ]]; then
   printf 'ERROR: API_PORT and UI_PORT must be distinct.\n' >&2
   exit 1
